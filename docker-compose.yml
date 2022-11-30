@@ -22,14 +22,14 @@ services:
       - "443:443"
     depends_on:
       - web_app
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
   certbot:
-    # Новый контейнер, который запуститься вместе с nginx
     container_name: certbot
     image: certbot/certbot
+    depends_on:
+      - nginx
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
-    depends_on:
-      - nginx
-    command: certbot certonly --webroot --webroot-path /var/www/certbot/ -d labao.ru
+    command: certonly --webroot --webroot-path=/var/www/certbot --email forregserv@gmail.com --agree-tos --no-eff-email -d labao.ru -d www.labao.ru
