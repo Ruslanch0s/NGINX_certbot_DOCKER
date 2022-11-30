@@ -18,8 +18,8 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
     ports:
-      - "1337:80"
-      - "1338:443"
+      - "80:80"
+      - "443:443"
     depends_on:
       - web_app
 
