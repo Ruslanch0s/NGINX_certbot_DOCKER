@@ -3,12 +3,13 @@ version: '3'
 services:
   web_app:
     container_name: web_app
-    build: .
+    build: ./example_project
     volumes:
-      - .:/src
-    restart: always
+      - ./example_project:/src
     expose:
-      - "8000"
+      - "80"
+    command: "uvicorn main:app --host 0.0.0.0 --port 80"
+    restart: always
 
   nginx:
     container_name: nginx
@@ -22,14 +23,14 @@ services:
       - "443:443"
     depends_on:
       - web_app
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    restart: always
 
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    depends_on:
-      - nginx
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
-    command: certonly --webroot --webroot-path=/var/www/certbot --email forregserv@gmail.com --agree-tos --no-eff-email -d labao.ru -d www.labao.ru
+#  certbot:
+#    container_name: certbot
+#    image: certbot/certbot
+#    depends_on:
+#      - nginx
+#    volumes:
+#      - ./data/certbot/conf:/etc/letsencrypt
+#      - ./data/certbot/www:/var/www/certbot
+#    command: certonly --webroot --webroot-path=/var/www/certbot --email forregserv@gmail.com --agree-tos --no-eff-email -d labao.ru -d www.labao.ru
