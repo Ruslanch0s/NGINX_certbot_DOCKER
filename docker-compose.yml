@@ -33,4 +33,3 @@ services:
 #    volumes:
 #      - ./data/certbot/conf:/etc/letsencrypt
 #      - ./data/certbot/www:/var/www/certbot
-#    command: certonly --webroot --webroot-path=/var/www/certbot --email forregserv@gmail.com --agree-tos --no-eff-email -d labao.ru -d www.labao.ru
