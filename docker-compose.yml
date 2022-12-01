@@ -25,11 +25,9 @@ services:
       - web_app
     restart: always
 
-#  certbot:
-#    container_name: certbot
-#    image: certbot/certbot
-#    depends_on:
-#      - nginx
-#    volumes:
-#      - ./data/certbot/conf:/etc/letsencrypt
-#      - ./data/certbot/www:/var/www/certbot
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
