@@ -135,4 +135,5 @@ dmypy.json
 # git add .
 # _________________________________________
 
-/data
+/nginx/data
+nginx.conf
