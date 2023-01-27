@@ -19,3 +19,80 @@ server {
         return 404;
     }
 }
+
+server {
+    listen 80 default_server;
+    listen [::]:80;
+
+    server_name _;
+
+    location /static/ {
+        alias /static_volumes/test_app/;
+    }
+
+    location / {
+        proxy_pass http://test_app:8000;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+    }
+
+
+}
+
+server {
+        listen 80;  # слушаем порт 80
+
+        server_name labao.ru www.labao.ru;  # обрабатываем запросы только на эти домены
+
+        location /static/ {
+            root /var/html/;
+        }
+
+        location /media/ {
+            root /var/html/;
+        }
+
+
+        location / {
+            return 301 https://$host$request_uri;  # редирект на https
+        }
+
+        location /.well-known/acme-challenge/ {  # для установки ssl certbotом
+            root /var/www/certbot;
+        }
+    }
+
+    server {
+        listen 443 ssl;
+        server_name labao.ru www.labao.ru;
+
+        ssl_certificate /etc/letsencrypt/live/labao.ru/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/labao.ru/privkey.pem;
+
+        location / {
+            proxy_pass http://web_app:80;  # редирект на webapp с контейнером
+        }
+    }
+
+    server {
+        listen 80;
+        listen [::]:80;  # запись для ipv6
+
+        server_name 5.188.50.249;
+
+        location / {
+            proxy_pass http://web_app:80;
+        }
+    }
+
+    server {
+        listen 80 default_server;  # default_server - если никакое server_name не подошло будет обрабатываться здесь
+        listen [::]:80;
+
+        server_name _;  # для всех имен
+
+        location / {
+            return 404;
+        }
+    }
